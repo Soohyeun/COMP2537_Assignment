@@ -136,6 +136,23 @@ img {
     background-color: #ddd
 }
 
+.dropdown-content input {
+    color: black;
+    background-color: whitesmoke;
+    border: 0;
+    padding: 12px 16px;
+    text-decoration: none;
+}
+
+.dropdown-content input:hover {
+    background-color: #ddd
+}
+
+.historydrop {
+    display: block;
+    width: 100%;
+    background-color: whitesmoke;
+}
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show_t {
     display: block;

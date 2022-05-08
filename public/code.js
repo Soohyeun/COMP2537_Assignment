@@ -223,11 +223,11 @@ function deleteThis(src) {
 function writeHistory() {
     console.log(localStorage)
     let historyList = '';
-    if (localStorage.length != 0) {
-        for (i = 1; i <= localStorage.length; i++) {
-            historyList += `<button onclick="clickHistory(this)" value=${localStorage[i]}>${localStorage[i]} <input type="button" value="X" idgit ="${i}" onclick="deleteThis(this)"></button>`
+        for (key in localStorage) {
+            if(isNaN(key)==false){
+            historyList += `<div class="historydrop"><input type="button" onclick="clickHistory(this)" value=${localStorage[key]}><input type="button" value="X" id ="${key}" onclick="deleteThis(this)"></div>`
+            }
         }
-    }
     historyList += '<button onclick="deleteAllHistory()">Delete all</button>';
 
     $("#NameHistory").html(historyList);
