@@ -1,3 +1,24 @@
+const back_colors = {
+    fire: '#FDDFDF',
+    grass: '#DEFDE0', 
+    electric: '#FCF7DE', 
+    water: '#DEF3FD', 
+    ground: '#f4e7da', 
+    rock: '#d5d5d4', 
+    fairy: '#fceaff', 
+    poison: '#98d7a5', 
+    bug: '#f8d5a3', 
+    dragon: '#97b3e6', 
+    psychic: '#eceda1', 
+    flying: '#F5F5F5', 
+    fighting: '#E6E0D4', 
+    normal: '#F5F5F5',
+    dark: '#A9A9A9',
+    ghost: '#DCDCDC',
+    ice: '#F5FFFA',
+    steel: '#708090' 
+}
+
 // dropdown menu
 function myFunction_t() {
     document.getElementById("TypeDropdown").classList.toggle("show_t");
@@ -56,7 +77,9 @@ function goProfile(dataID) {
 // index, random 9 pokemon
 function processPokeResp(data) {
     console.log(data)
-    poke_img += `<div class="pokemon_container">
+    let thisType = data.types[0].type.name;
+    console.log(thisType)
+    poke_img += `<div class="pokemon_container" style="background-color: ${back_colors[thisType]}">
     <button onclick = "goProfile(${data.id})" type="submit"><img src="${data.sprites.other["official-artwork"].front_default}"></button>
     <h4>${data.name}</h4>
     </div>`
@@ -87,7 +110,9 @@ let pokeInfos = '';
 let page_id = 1;
 
 function displayPoke(data) {
-    pokeInfos += `<div class="pokemon_container">
+    let poketype = data.types[0].type.name;
+    
+    pokeInfos += `<div class="pokemon_container" style="background-color: ${back_colors[poketype]}">
     <button onclick = "goProfile(${data.id})" type="submit"><img src="${data.sprites.other["official-artwork"].front_default}"></button>
     <h4>${data.name}</h4>
 </div>`
@@ -200,7 +225,7 @@ function writeHistory() {
     let historyList = '';
     if (localStorage.length != 0) {
         for (i = 1; i <= localStorage.length; i++) {
-            historyList += `<button onclick="clickHistory(this)" value=${localStorage[i]}>${localStorage[i]} <input type="button" value="X" id="${i}" onclick="deleteThis(this)"></button>`
+            historyList += `<button onclick="clickHistory(this)" value=${localStorage[i]}>${localStorage[i]} <input type="button" value="X" idgit ="${i}" onclick="deleteThis(this)"></button>`
         }
     }
     historyList += '<button onclick="deleteAllHistory()">Delete all</button>';
