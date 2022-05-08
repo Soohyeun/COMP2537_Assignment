@@ -35,7 +35,7 @@
             </h1>
         </header>
         <nav>
-            <div style="display: flex;">
+            <div id="inside_nav">
                 <div class="dropdown">
                     <button onclick="myFunction_t()" id="dropbtnType" class="dropbtn">Type <i class="fa fa-caret-down"></i></button>
                     <div id="TypeDropdown" class="dropdown-content">
@@ -78,7 +78,12 @@
 
             <div id="inputName">
                 <label for="poke_name">Name/ID</label>
-                <input type="text" id="input_name" placeholder="Enter name or id">
+                <span>
+                <input type="text" id="input_name" placeholder="Enter name or id" onclick="myFunction_n()">
+                <div id="NameHistory" class="dropdown-content" style="margin-left: 62px; width: 180px;">
+                    <button onclick="deleteAllHistory()">Delete all</button>
+                </div>
+                </span>
                 <button onclick="searchByName()" class='btn btn-outline-secondary'>Search</button>
             </div>
         </nav>

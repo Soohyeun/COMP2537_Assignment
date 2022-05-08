@@ -7,6 +7,10 @@ function myFunction_c() {
     document.getElementById("ColourDropdown").classList.toggle("show_c");
 }
 
+function myFunction_n() {
+    document.getElementById("NameHistory").classList.toggle("show_n");
+}
+
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function (event) {
     if (!event.target.matches('#dropbtnType')) {
@@ -29,10 +33,19 @@ window.onclick = function (event) {
             }
         }
     }
+    if (!event.target.matches('#input_name')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show_n')) {
+                openDropdown.classList.remove('show_n');
+            }
+        }
+    }
 }
 
-
-poke_img = ''
+poke_img = '';
 
 // check profile
 function goProfile(dataID) {
@@ -50,11 +63,11 @@ function processPokeResp(data) {
 }
 
 async function popPokemon() {
-    for (i = 1; i <= 3; i++) {
+    for (k = 1; k <= 3; k++) {
         poke_img += '<div class="pokemon_group">'
         for (j = 1; j <= 3; j++) {
             let random_number = Math.floor(Math.random() * 800) + 1
-            console.log(random_number)
+            // console.log(random_number)
 
             await $.ajax({
                 type: "GET",
@@ -168,6 +181,46 @@ function searchByColour(src) {
 
 }
 
+//history
+let num = 1;
+
+function clickHistory(src) {
+    $('#input_name').val(src.value);
+    searchByName()
+}
+
+function deleteThis(src) {
+    let key = src.id
+    localStorage.removeItem(`${key}`);
+    writeHistory();
+}
+
+function writeHistory() {
+    console.log(localStorage)
+    let historyList = '';
+    if (localStorage.length != 0) {
+        for (i = 1; i <= localStorage.length; i++) {
+            historyList += `<button onclick="clickHistory(this)" value=${localStorage[i]}>${localStorage[i]} <input type="button" value="X" id="${i}" onclick="deleteThis(this)"></button>`
+        }
+    }
+    historyList += '<button onclick="deleteAllHistory()">Delete all</button>';
+
+    $("#NameHistory").html(historyList);
+}
+
+function saveHistory(pokeName) {
+    localStorage.setItem(`${num}`, pokeName);
+    num++;
+
+    writeHistory();
+}
+
+function deleteAllHistory() {
+    localStorage.clear();
+    num = 1;
+    writeHistory();
+}
+
 async function searchByName() {
     $('#pagination').empty()
     $("#contents").empty()
@@ -190,6 +243,7 @@ async function searchByName() {
 
     $('main').html(pokeInfos);
 
+    saveHistory(pokeName)
 }
 
 function change_page() {
@@ -199,6 +253,7 @@ function change_page() {
 
 function setup() {
     popPokemon()
+    writeHistory()
     $("body").on("click", ".page_num_btn", change_page)
 
 }
