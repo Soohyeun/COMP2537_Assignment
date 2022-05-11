@@ -15,6 +15,32 @@ app.use(bodyparser.urlencoded({
 
 app.use(express.static('public')) // public 폴더 안에 있는 모든 파일을 보내줌
 
+const mongoose = require('mongoose');
+
+mongoose.connect("mongodb://127.0.0.1:27017/timelineDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+const timelineSchema = new mongoose.Schema({
+    text: String,
+    hits: Number,
+    time: String
+});
+const timelineModel = mongoose.model("timelines", timelineSchema);
+
+app.get('/timeline', function (req, res) {
+    console.log('inside site')
+    timelineModel.find({}, function (err, timelines) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(timelines);
+        }
+        res.send(timelines);
+    });
+})
+
+
 app.get('/profile/:id', function (req, res) {
 
     const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
