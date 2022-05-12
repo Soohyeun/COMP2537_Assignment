@@ -1,22 +1,22 @@
 const back_colors = {
     fire: '#FDDFDF',
-    grass: '#DEFDE0', 
-    electric: '#FCF7DE', 
-    water: '#DEF3FD', 
-    ground: '#f4e7da', 
-    rock: '#d5d5d4', 
-    fairy: '#fceaff', 
-    poison: '#98d7a5', 
-    bug: '#f8d5a3', 
-    dragon: '#97b3e6', 
-    psychic: '#eceda1', 
-    flying: '#F5F5F5', 
-    fighting: '#E6E0D4', 
+    grass: '#DEFDE0',
+    electric: '#FCF7DE',
+    water: '#DEF3FD',
+    ground: '#f4e7da',
+    rock: '#d5d5d4',
+    fairy: '#fceaff',
+    poison: '#98d7a5',
+    bug: '#f8d5a3',
+    dragon: '#97b3e6',
+    psychic: '#eceda1',
+    flying: '#F5F5F5',
+    fighting: '#E6E0D4',
     normal: '#F5F5F5',
     dark: '#A9A9A9',
     ghost: '#DCDCDC',
     ice: '#F5FFFA',
-    steel: '#708090' 
+    steel: '#708090'
 }
 
 // dropdown menu
@@ -74,11 +74,11 @@ function goProfile(dataID) {
 }
 
 
-// index, random 9 pokemon
+// index.html, random 9 pokemon
 function processPokeResp(data) {
-    console.log(data)
+    // console.log(data)
     let thisType = data.types[0].type.name;
-    console.log(thisType)
+    // console.log(thisType)
     poke_img += `<div class="pokemon_container" style="background-color: ${back_colors[thisType]}">
     <button onclick = "goProfile(${data.id})" type="submit"><img src="${data.sprites.other["official-artwork"].front_default}"></button>
     <h4>${data.name}</h4>
@@ -104,6 +104,66 @@ async function popPokemon() {
     $('main').html(poke_img)
 }
 
+//history
+let num = 1;
+
+function clickHistory(src) {
+    $('#input_name').val(src.value);
+    searchByName()
+}
+
+function deleteThis(src) {
+    let key = src.id
+    localStorage.removeItem(`${key}`);
+    writeHistory();
+}
+
+function writeHistory() {
+    console.log(localStorage)
+    let historyList = '';
+    for (key in localStorage) {
+        if (isNaN(key) == false) {
+            historyList += `<div class="historydrop"><input type="button" onclick="clickHistory(this)" value=${localStorage[key]}><input type="button" value="X" id ="${key}" onclick="deleteThis(this)"></div>`
+        }
+    }
+    historyList += '<button onclick="deleteAllHistory()">Delete all</button>';
+
+    $("#NameHistory").html(historyList);
+}
+
+function saveHistory(pokeName) {
+    localStorage.setItem(`${num}`, pokeName);
+    num++;
+
+    writeHistory();
+}
+
+function deleteAllHistory() {
+    localStorage.clear();
+    num = 1;
+    writeHistory();
+}
+
+
+//timeline
+function addNewEvent(pokeType, criteria) {
+    var now = new Date(Date.now());
+
+    $.ajax({
+        url: "http://localhost:5002/timeline/insert",
+        type: "put",
+        data: {
+            text: `Client has searched '${criteria}' for ${pokeType}`,
+            hits: 1,
+            time: now
+        },
+        success: (res) => {
+            console.log(res)
+        }
+    })
+}
+
+
 //search
 let pokeList = [];
 let pokeInfos = '';
@@ -111,7 +171,7 @@ let page_id = 1;
 
 function displayPoke(data) {
     let poketype = data.types[0].type.name;
-    
+
     pokeInfos += `<div class="pokemon_container" style="background-color: ${back_colors[poketype]}">
     <button onclick = "goProfile(${data.id})" type="submit"><img src="${data.sprites.other["official-artwork"].front_default}"></button>
     <h4>${data.name}</h4>
@@ -159,13 +219,13 @@ function paginationType(data) {
     findPokeInfo()
 }
 
-
 function searchByType(src) {
     $('#pagination').empty()
     $("#contents").empty()
-    // pokeType = $('#poke_type option:selected').val();
     pokeType = src.value;
     console.log(pokeType)
+
+    addNewEvent(pokeType, "type")
 
     $.ajax({
         url: `https://pokeapi.co/api/v2/type/${pokeType}`,
@@ -198,6 +258,8 @@ function searchByColour(src) {
     pokeColour = src.value;
     console.log(pokeColour)
 
+    addNewEvent(pokeColour, "colour")
+
     $.ajax({
         url: `https://pokeapi.co/api/v2/pokemon-color/${pokeColour}`,
         type: "GET",
@@ -206,51 +268,14 @@ function searchByColour(src) {
 
 }
 
-//history
-let num = 1;
-
-function clickHistory(src) {
-    $('#input_name').val(src.value);
-    searchByName()
-}
-
-function deleteThis(src) {
-    let key = src.id
-    localStorage.removeItem(`${key}`);
-    writeHistory();
-}
-
-function writeHistory() {
-    console.log(localStorage)
-    let historyList = '';
-        for (key in localStorage) {
-            if(isNaN(key)==false){
-            historyList += `<div class="historydrop"><input type="button" onclick="clickHistory(this)" value=${localStorage[key]}><input type="button" value="X" id ="${key}" onclick="deleteThis(this)"></div>`
-            }
-        }
-    historyList += '<button onclick="deleteAllHistory()">Delete all</button>';
-
-    $("#NameHistory").html(historyList);
-}
-
-function saveHistory(pokeName) {
-    localStorage.setItem(`${num}`, pokeName);
-    num++;
-
-    writeHistory();
-}
-
-function deleteAllHistory() {
-    localStorage.clear();
-    num = 1;
-    writeHistory();
-}
-
 async function searchByName() {
     $('#pagination').empty()
     $("#contents").empty()
     pokeName = $('#input_name').val();
     console.log(pokeName)
+
+    addNewEvent(pokeName, "name")
+
     pokeInfos = ''
 
     pokeInfos += '<div class="pokemon_group">'

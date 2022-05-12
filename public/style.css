@@ -171,6 +171,9 @@ img {
         flex-direction: column;
         text-align: center;
     }
+    .dropdown-content  {
+        width: 100%;
+    }
     #inside_nav{
         flex-direction: column;
     }
