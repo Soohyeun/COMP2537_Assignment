@@ -19,10 +19,17 @@ app.use(express.static('public')) // public 폴더 안에 있는 모든 파일�
 const mongoose = require('mongoose');
 
 //localhost쓰면 안됨 ㅠㅠ 127.0.0.1쓰기
-mongoose.connect("mongodb://127.0.0.1:27017/timelineDB", {
+// mongoose.connect("mongodb://127.0.0.1:27017/timelineDB", {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true
+// });
+
+mongoose.connect("mongodb+srv://soo:soohyeun@cluster0.styn6.mongodb.net/COMP2537?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+
+
 const timelineSchema = new mongoose.Schema({
     text: String,
     hits: Number,

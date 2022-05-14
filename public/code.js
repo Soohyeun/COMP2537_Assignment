@@ -220,6 +220,7 @@ function paginationType(data) {
 }
 
 function searchByType(src) {
+    page_id = 1
     $('#pagination').empty()
     $("#contents").empty()
     pokeType = src.value;
@@ -253,6 +254,7 @@ function paginationColour(data) {
 }
 
 function searchByColour(src) {
+    page_id = 1
     $('#pagination').empty()
     $("#contents").empty()
     pokeColour = src.value;
@@ -269,6 +271,7 @@ function searchByColour(src) {
 }
 
 async function searchByName() {
+    page_id = 1
     $('#pagination').empty()
     $("#contents").empty()
     pokeName = $('#input_name').val();

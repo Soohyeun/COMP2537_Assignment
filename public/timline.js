@@ -11,8 +11,8 @@ function loadEventsToMainDiv() {
                 <p> Event Text: ${r[i].text}</p>
                 <p> Event Time: ${r[i].time}</p>
                 <p> Event hits: ${r[i].hits}</p>
-                <button class="likeButtons" id="${r[i]["_id"]}"> Like</button>
-                <button class="deleteButtons" value="${r[i]["_id"]}"> Delete</button>
+                <button class="btn btn-secondary likeButtons" id="${r[i]["_id"]}"> Like 👍 </button>
+                <button class="btn btn-secondary deleteButtons" value="${r[i]["_id"]}"> Delete</button>
                 </div>`)
             }
         }
