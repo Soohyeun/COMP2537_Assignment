@@ -1,0 +1,188 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.outer {
+    display: flex;
+    flex-direction: column;
+}
+
+
+body {
+    margin: 0px;
+    background-color: rgba(246, 218, 237, 0.975);
+}
+
+header {
+    margin: 30px;
+}
+
+header h1 a {
+    font-family: 'Bangers', cursive;
+    color: black;
+}
+
+nav {
+    background-color: #333;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#inside_nav{
+    display: flex;
+}
+
+.pokemon_container button {
+    border: 0;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 0;
+}
+
+header,
+footer {
+    margin: 20px;
+    text-align: center;
+}
+
+main {
+    display: flex;
+    justify-content: space-around;
+    padding: 10px;
+    margin-bottom: 30px;
+}
+
+h1 {
+    margin: 0px;
+}
+
+img {
+    width: 100%;
+}
+
+.pokemon_container {
+    border: #333 solid 1.5px;
+    border-radius: 15px;
+    padding: 30px 0px 20px 0px;
+    margin: 30px 0;
+    text-align: center;
+    font-family: 'Russo One', sans-serif;
+}
+
+.pokemon_group {
+    width: 25%;
+}
+
+#pagination {
+    text-align: center;
+}
+
+#inputName {
+    background-color: #333;
+    color: white;
+    padding: 10px 30px;
+    font-size: 16px;
+}
+
+#inputName input {
+    background-color: rgb(143, 142, 142);
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #333;
+    color: white;
+    padding: 10px 30px;
+    font-size: 16px;
+    width: 150px;
+    height: 59px;
+    border: none;
+    cursor: pointer;
+}
+
+/* Dropdown button on hover & focus */
+.dropbtn:hover,
+.dropbtn:focus {
+    background-color: rgb(87, 86, 86);
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    max-height: 500px;
+    overflow: auto;
+    /* to get scroll */
+}
+
+/* Links inside the dropdown */
+.dropdown-content button {
+    color: black;
+    background-color: whitesmoke;
+    border: 0;
+    width: 100%;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content button:hover {
+    background-color: #ddd
+}
+
+.dropdown-content input {
+    color: black;
+    background-color: whitesmoke;
+    border: 0;
+    padding: 12px 16px;
+    text-decoration: none;
+}
+
+.dropdown-content input:hover {
+    background-color: #ddd
+}
+
+.historydrop {
+    display: block;
+    width: 100%;
+    background-color: whitesmoke;
+}
+/* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+.show_t {
+    display: block;
+}
+
+.show_c {
+    display: block;
+}
+
+.show_n {
+    display: block;
+}
+
+@media screen and (max-width: 700px) {
+    nav {
+        flex-direction: column;
+        text-align: center;
+    }
+    .dropdown-content  {
+        width: 100%;
+    }
+    #inside_nav{
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 500px) {
+    .pokemon_group{
+        width: 90%;
+    }
+    main {
+        flex-direction: column;
+    }
+}

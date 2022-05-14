@@ -96,7 +96,7 @@ async function popPokemon() {
 
             await $.ajax({
                 type: "GET",
-                url: `https://pokeapi.co/api/v2/pokemon/${temp_num[x]}/`,
+                url: `http://localhost:5002/pokemon/${temp_num[x]}/`,
                 success: processPokeResp
             })
 

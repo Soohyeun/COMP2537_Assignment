@@ -1,0 +1,26 @@
+{
+  "name": "comp2537_assignment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Soohyeun/COMP2537_Assignment.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Soohyeun/COMP2537_Assignment/issues"
+  },
+  "homepage": "https://github.com/Soohyeun/COMP2537_Assignment#readme",
+  "dependencies": {
+    "ejs": "^3.1.7",
+    "express": "^4.18.1",
+    "mongodb": "^4.6.0",
+    "mongoose": "^6.3.3"
+  }
+}
