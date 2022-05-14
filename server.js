@@ -2,6 +2,8 @@ const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
 const https = require('https');
+const http = require('http');
+const fs = require("fs");
 
 app.listen(process.env.PORT || 5002, function (err) {
     if (err)
@@ -15,6 +17,50 @@ app.use(bodyparser.urlencoded({
 }));
 
 app.use(express.static('public')) // public 폴더 안에 있는 모든 파일을 보내줌
+
+let pokemon = fs.readFileSync('pokemon.json');
+const pokemoneDATA = JSON.parse(pokemon);
+
+
+app.get('/alldata', function (req, res) {
+    console.log('inside site')
+    res.send(pokemoneDATA);
+})
+
+//serach by name
+app.get('/pokemon/:name', function (req, res) {
+    let pokeName = req.params.name
+
+    let this_name = pokemoneDATA.pokemons.filter((obj1) => {
+        return (obj1.name == pokeName) || (obj1.id == pokeName)
+    })
+    console.log(this_name[0])
+    res.send(this_name[0]);
+})
+
+
+// search by type
+app.get('/type/:type', function (req, res) {
+    let pokeType = req.params.type
+
+    let this_type = pokemoneDATA.types.filter((obj1) => {
+        return obj1.name == pokeType
+    })
+    console.log(this_type[0])
+    res.send(this_type[0]);
+})
+
+// search by colour
+app.get('/pokemon-color/:colour', function (req, res) {
+    let pokeColour = req.params.colour
+
+    let this_colour = pokemoneDATA.colours.filter((obj1) => {
+        return obj1.name == pokeColour
+    })
+    console.log(this_colour[0])
+    res.send(this_colour[0]);
+})
+
 
 const mongoose = require('mongoose');
 
@@ -107,10 +153,10 @@ app.get('/timeline/increaseHits/:id', function (req, res) {
 // See profile start
 app.get('/profile/:id', function (req, res) {
 
-    const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
+    const url = `http://localhost:5002/pokemon/${req.params.id}`
 
     data = ""
-    https.get(url, function (https_res) {
+    http.get(url, function (https_res) {
         https_res.on("data", function (chunk) {
             data += chunk
         })

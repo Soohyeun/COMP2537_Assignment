@@ -86,17 +86,21 @@ function processPokeResp(data) {
 }
 
 async function popPokemon() {
+    var temp_num = [1, 2, 7, 143, 50, 25, 1, 2, 7];
+    let x = 0;
     for (k = 1; k <= 3; k++) {
         poke_img += '<div class="pokemon_group">'
         for (j = 1; j <= 3; j++) {
-            let random_number = Math.floor(Math.random() * 800) + 1
+            // let random_number = Math.floor(Math.random() * 800) + 1
             // console.log(random_number)
 
             await $.ajax({
                 type: "GET",
-                url: `https://pokeapi.co/api/v2/pokemon/${random_number}/`,
+                url: `https://pokeapi.co/api/v2/pokemon/${temp_num[x]}/`,
                 success: processPokeResp
             })
+
+            x++;
         }
         poke_img += '</div>'
     }
@@ -190,7 +194,7 @@ async function findPokeInfo() {
         for (j = order;
             (j < order + 3) && (j < pokeList.length); j++) {
             await $.ajax({
-                url: `https://pokeapi.co/api/v2/pokemon/${pokeList[j]}`,
+                url: `http://localhost:5002/pokemon/${pokeList[j]}`,
                 type: "GET",
                 success: displayPoke
             })
@@ -229,7 +233,7 @@ function searchByType(src) {
     addNewEvent(pokeType, "type")
 
     $.ajax({
-        url: `https://pokeapi.co/api/v2/type/${pokeType}`,
+        url: `http://localhost:5002/type/${pokeType}`,
         type: "GET",
         success: paginationType
     })
@@ -263,7 +267,7 @@ function searchByColour(src) {
     addNewEvent(pokeColour, "colour")
 
     $.ajax({
-        url: `https://pokeapi.co/api/v2/pokemon-color/${pokeColour}`,
+        url: `http://localhost:5002/pokemon-color/${pokeColour}`,
         type: "GET",
         success: paginationColour
     })
@@ -284,10 +288,10 @@ async function searchByName() {
     pokeInfos += '<div class="pokemon_group">'
 
     await $.ajax({
-        url: `https://pokeapi.co/api/v2/pokemon/${pokeName}`,
+        url: `http://localhost:5002/pokemon/${pokeName}`,
         type: "GET",
         success: displayPoke,
-        error: function (pokeName) {
+        error: function () {
             alert(`Nonexistent pokemon. Please enter again.`)
         },
     })
