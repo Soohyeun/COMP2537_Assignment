@@ -16,6 +16,14 @@ app.use(bodyparser.urlencoded({
 
 app.use(express.static('public')) // public 폴더 안에 있는 모든 파일을 보내줌
 
+//global middleware는 router 위에 놓아야한다. 최대한 위로 올려놓으세요
+//app.use(function name) -> app.use는 middleware로 안에 function을 execute시켜준다.: global middleware, 여러개 써도됨 처음 온것부터 실행됨
+
+
+//next(): 다음꺼 실행하라는건데 실행 후 다시 제자리로 돌아옴. next()다음에 다른 코드도 쓸 수 있음 근데 추천은 안하니까.. 그냥 마지막에 놓는게 좋다. 모든 이후의 작업을 다 끝내고 와야해서...
+
+//res.send / res.redirect -> 이거는 한개만 있어야하는데 res.write 이거는 여러개 있어도 됨
+
 const mongoose = require('mongoose');
 
 //localhost쓰면 안됨 ㅠㅠ 127.0.0.1쓰기
