@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping cart</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Russo+One&display=swap" rel="stylesheet">
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!-- js -->
+    <script src="./cart.js"></script>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .outer {
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        body {
+            margin: 0px;
+            background-color: rgba(246, 218, 237, 0.975);
+        }
+
+        header {
+            margin: 30px;
+        }
+
+        header h1 a {
+            font-family: 'Bangers', cursive;
+            color: black;
+        }
+
+        header,
+        footer {
+            margin: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0px;
+        }
+        main h2 {
+            font-family: 'Russo One', sans-serif;
+            text-align: center;
+        }
+
+        #contents {
+            padding: 30px;
+            border-radius: 20px;
+            border: 5px solid rgb(212, 213, 213);
+            margin: 30px 30px;
+        }
+
+        table {
+            border: 1px solid black;
+            width: 90%;
+            margin-left: 5%;
+        }
+        td, tr, th {
+            font-family: 'Russo One', sans-serif;
+            border: 1px solid black;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .item_img {
+            width: 150px;
+        }
+
+        #checkOutBtn{
+            margin: 20px;
+        }
+
+        .btn-outline-success {
+            font-size: 10px;
+            width: 25px;
+            height: 25px;
+            padding: 0;
+            align-content: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="outer">
+
+        <header>
+            <h1 style="font-size: 50px;">
+                <a href="./index.html">COMP2537 Pokemon Page</a>
+            </h1>
+        </header>
+        <main>
+
+            <h2> Shopping Cart </h2>
+            <div id="contents">
+                <table>
+                    <tr>
+                        <th>Item</th>
+                        <th>Item Name</th>
+                        <th>Quantity</th>
+                        <th>HP (Price)</th>
+                        <th>Total HP</th>
+                        <th> Remove </th>
+                    </tr>
+                    <tr>
+                        <td class="item_info">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/279.png" class="item_img">
+                        </td>
+                        <td>Name</td>
+                        <td>
+                            <button class="btn btn-outline-success upButtons" id=""> ↓ </button>
+                            1
+                            <button class="btn btn-outline-success downButtons" id=""> ↑ </button>
+                        </td>
+                        <td>30</td>
+                        <td>1*30</td>
+                        <td><button class="btn btn-outline-danger deleteButtons" value=""> X</button></td>
+                    </tr>
+                    <tr>
+                        <td class="item_info">
+                                <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/279.png" class="item_img">
+                        </td>
+                        <td>Name</td>
+                        <td>
+                            <button class="btn btn-outline-success upButtons" id=""> ↓ </button>
+                            1
+                            <button class="btn btn-outline-success downButtons" id=""> ↑ </button>
+                        </td>
+                        <td>30</td>
+                        <td>1*30</td>
+                        <td><button class="btn btn-outline-danger deleteButtons" value=""> X</button></td>
+                    </tr>
+                </table>
+                <div style="text-align: right;">
+                    <button id="checkOutBtn" class="btn btn-success">Check out</button>
+                </div>
+                
+            </div>
+
+        </main>
+
+        <footer>
+            <h5>
+                © 2022 BCIT COMP2537 Pokemon Soo
+            </h5>
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
