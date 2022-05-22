@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
 const https = require('https');
+const fs = require("fs");
 
 app.listen(process.env.PORT || 5002, function (err) {
     if (err)
@@ -9,12 +10,23 @@ app.listen(process.env.PORT || 5002, function (err) {
 })
 
 // req.body.~ 쓸 수 있게끔 (post)
-const bodyparser = require("body-parser"); 
+const bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({
     extended: true
 }));
 
+
 app.use(express.static('public')) // public 폴더 안에 있는 모든 파일을 보내줌
+
+
+// Use the session middleware
+var session = require('express-session')
+
+app.use(session({
+    secret: 'ssshhhhh',
+    saveUninitialized: true,
+    resave: true
+}));
 
 //global middleware는 router 위에 놓아야한다. 최대한 위로 올려놓으세요
 //app.use(function name) -> app.use는 middleware로 안에 function을 execute시켜준다.: global middleware, 여러개 써도됨 처음 온것부터 실행됨
@@ -25,6 +37,9 @@ app.use(express.static('public')) // public 폴더 안에 있는 모든 파일�
 //res.send / res.redirect -> 이거는 한개만 있어야하는데 res.write 이거는 여러개 있어도 됨
 
 const mongoose = require('mongoose');
+const {
+    addAbortSignal
+} = require('stream');
 
 //localhost쓰면 안됨 ㅠㅠ 127.0.0.1쓰기
 // mongoose.connect("mongodb://127.0.0.1:27017/timelineDB", {
@@ -32,27 +47,104 @@ const mongoose = require('mongoose');
 //     useUnifiedTopology: true
 // });
 
+
 mongoose.connect("mongodb+srv://soo:soohyeun@cluster0.styn6.mongodb.net/COMP2537?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
 
 
-const timelineSchema = new mongoose.Schema({
-    text: String,
-    hits: Number,
-    time: String
+app.get('/login', function (req, res) {
+    let doc = fs.readFileSync('./public/login.html', "utf8");
+    res.send(doc);
 });
+
+
+// authentication start
+
+const usersSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    useremail: String
+});
+
+const usersModel = mongoose.model("users", usersSchema);
+
+
+app.get('/checkuser', function (req, res) {
+    if (req.session.loggedIn) {
+        res.send(true)
+    } else {
+        res.send(false)
+    }
+})
+
+
+app.get("/logout", function (req, res) {
+    if (req.session) {
+        req.session.destroy(function (error) {
+            if (error) {
+                res.send({
+                    "result": "Failed",
+                    "msg": "Could not log out."
+                })
+            } else {
+                res.send({
+                    "result": "Succeeded",
+                    "msg": "Successfully logged out."
+                })
+            }
+        });
+    }
+});
+
+
+app.post('/api/login', function (req, res) {
+    CurrentUserID = req.body.useremail;
+    CurrentUserPW = req.body.userpw;
+    console.log(CurrentUserID + CurrentUserPW)
+
+    usersModel.find({
+        useremail: CurrentUserID
+    }, function (err, users) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(users)
+            if (Object.keys(users).length == 0) {
+                res.send('no user')
+            } else {
+                console.log(users)
+                console.log(CurrentUserPW)
+                if (users[0].password == CurrentUserPW) {
+                    res.send('login')
+                    req.session.loggedIn = true;
+                    req.session.id = users[0]._id;
+                    req.session.name = users[0].username;
+                    req.session.email = users[0].useremail;
+                    req.session.save(function (err) {});
+                    console.log(req.session.loggedIn)
+                } else {
+                    res.send('incorrect password')
+                }
+            }
+        }
+    });
+})
 
 
 
 //timeline start
 //참고로 collection명은 무조건 복수 s, 대문자 포함하면 안된다!
+const timelineSchema = new mongoose.Schema({
+    text: String,
+    hits: Number,
+    time: String
+});
 const timelineModel = mongoose.model("timelines", timelineSchema);
 
 //timelines collection에 있는 데이터 가져오기
 app.get('/timeline/getAllEvents', function (req, res) {
-    console.log('inside site')
     timelineModel.find({}, function (err, data) {
         if (err) {
             console.log("Error " + err);
@@ -100,7 +192,9 @@ app.get('/timeline/increaseHits/:id', function (req, res) {
     timelineModel.updateOne({
         '_id': req.params.id
     }, {
-        $inc: {hits: 1}
+        $inc: {
+            hits: 1
+        }
     }, function (err, data) {
         if (err) {
             console.log("Error " + err);

@@ -66,6 +66,40 @@ window.onclick = function (event) {
     }
 }
 
+//logout
+async function logout() {
+    await $.ajax({
+        type: "GET",
+        url: "http://localhost:5002/logout",
+        success: function(data){
+            if(data.result == "Succeeded"){
+                $("#login").html(`<button onclick="window.open('/login', 'profilePopUp', 'width=300, height=400, left=400, top=200;')" class="dropbtn"> Login </button>`)
+                location.reload()
+            }else {
+                alert("Logout Failed")
+            }
+        }
+    })
+
+}
+
+
+//Check user in
+async function checkUser() {
+    await $.ajax({
+        type: "GET",
+        url: "http://localhost:5002/checkuser",
+        success: function(data){
+            console.log(data)
+            if(data){
+                $("#login").html(`<button onclick="logout()" class="dropbtn"> Logout </button>`)
+            }else {
+                $("#login").html(`<button onclick="window.open('/login', 'profilePopUp', 'width=300, height=400, left=400, top=200;')" class="dropbtn"> Login </button>`)
+            }
+        }
+    })
+}
+
 poke_img = '';
 
 // check profile
@@ -305,6 +339,7 @@ function change_page() {
 }
 
 function setup() {
+    checkUser()
     popPokemon()
     writeHistory()
     $("body").on("click", ".page_num_btn", change_page)
