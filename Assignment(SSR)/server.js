@@ -40,6 +40,7 @@ const mongoose = require('mongoose');
 const {
     addAbortSignal
 } = require('stream');
+const { ObjectId } = require('mongodb');
 
 //localhost쓰면 안됨 ㅠㅠ 127.0.0.1쓰기
 // mongoose.connect("mongodb://127.0.0.1:27017/timelineDB", {
@@ -59,6 +60,11 @@ app.get('/login', function (req, res) {
     res.send(doc);
 });
 
+app.get('/signup', function (req, res) {
+    let doc = fs.readFileSync('./public/signup.html', "utf8");
+    res.send(doc);
+});
+
 
 // authentication start
 
@@ -73,7 +79,11 @@ const usersModel = mongoose.model("users", usersSchema);
 
 app.get('/checkuser', function (req, res) {
     if (req.session.loggedIn) {
-        res.send(true)
+        res.send({
+            userID: req.session.id,
+            username: req.session.name,
+            useremail: req.session.email
+        })
     } else {
         res.send(false)
     }
@@ -119,11 +129,12 @@ app.post('/api/login', function (req, res) {
                 if (users[0].password == CurrentUserPW) {
                     res.send('login')
                     req.session.loggedIn = true;
-                    req.session.id = users[0]._id;
+                    req.session.userid = users[0]._id;
                     req.session.name = users[0].username;
                     req.session.email = users[0].useremail;
                     req.session.save(function (err) {});
                     console.log(req.session.loggedIn)
+                    console.log(req.session.userid)
                 } else {
                     res.send('incorrect password')
                 }
@@ -137,6 +148,7 @@ app.post('/api/login', function (req, res) {
 //timeline start
 //참고로 collection명은 무조건 복수 s, 대문자 포함하면 안된다!
 const timelineSchema = new mongoose.Schema({
+    userid: String,
     text: String,
     hits: Number,
     time: String
@@ -145,7 +157,9 @@ const timelineModel = mongoose.model("timelines", timelineSchema);
 
 //timelines collection에 있는 데이터 가져오기
 app.get('/timeline/getAllEvents', function (req, res) {
-    timelineModel.find({}, function (err, data) {
+    timelineModel.find({
+        userid: req.session.userid
+    }, function (err, data) {
         if (err) {
             console.log("Error " + err);
         } else {
@@ -155,11 +169,44 @@ app.get('/timeline/getAllEvents', function (req, res) {
     });
 })
 
+app.put('/timeline/loginrecord', function (req, res) {
+    timelineModel.create({
+        'userid': req.session.userid,
+        'text': `${req.session.name} ${req.body.text}`,
+        'time': req.body.time,
+        'hits': req.body.hits
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send("Insertion is sucessful!");
+    });
+})
+
+app.put('/timeline/logoutrecord', function (req, res) {
+    timelineModel.create({
+        'userid': req.session.userid,
+        'text': `${req.session.name} ${req.body.text}`,
+        'time': req.body.time,
+        'hits': req.body.hits
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send("Insertion is sucessful!");
+    });
+})
+
 // update같은거 -> post랑 비슷한데 body parser를 쓰는데 그냥.. html에서 오는걸 post로 쓸라고 그냥 구분지어서 이번엔 걍 put쓴다
 app.put('/timeline/insert', function (req, res) {
     timelineModel.create({
+        'userid': req.session.userid,
         'text': req.body.text,
-        'time': req.body.time,
+        'time': req.session.name + req.body.time,
         'hits': req.body.hits
     }, function (err, data) {
         if (err) {
@@ -206,7 +253,7 @@ app.get('/timeline/increaseHits/:id', function (req, res) {
 })
 
 
-// See profile start
+// See pokemon profile start
 app.get('/profile/:id', function (req, res) {
 
     const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`

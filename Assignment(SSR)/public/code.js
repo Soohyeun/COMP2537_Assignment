@@ -66,6 +66,24 @@ window.onclick = function (event) {
     }
 }
 
+
+//Check user in
+async function checkUser() {
+    await $.ajax({
+        type: "GET",
+        url: "http://localhost:5002/checkuser",
+        success: function(data){
+            console.log(data)
+            if(data){
+                $("#login").html(`<button onclick="logoutRecord()" class="dropbtn"> Logout </button>`)
+            }else {
+                $("#login").html(`<button onclick="window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;')" class="dropbtn"> Login </button>`)
+            }
+        }
+    })
+}
+
+
 //logout
 async function logout() {
     await $.ajax({
@@ -84,21 +102,7 @@ async function logout() {
 }
 
 
-//Check user in
-async function checkUser() {
-    await $.ajax({
-        type: "GET",
-        url: "http://localhost:5002/checkuser",
-        success: function(data){
-            console.log(data)
-            if(data){
-                $("#login").html(`<button onclick="logout()" class="dropbtn"> Logout </button>`)
-            }else {
-                $("#login").html(`<button onclick="window.open('/login', 'profilePopUp', 'width=300, height=400, left=400, top=200;')" class="dropbtn"> Login </button>`)
-            }
-        }
-    })
-}
+
 
 poke_img = '';
 
@@ -106,6 +110,8 @@ poke_img = '';
 function goProfile(dataID) {
     window.open(`/profile/${dataID}`, "profilePopUp", "width=500, height=700, left=300, top=300;");
 }
+
+
 
 
 // index.html, random 9 pokemon
@@ -137,6 +143,9 @@ async function popPokemon() {
 
     $('main').html(poke_img)
 }
+
+
+
 
 //history
 let num = 1;
@@ -180,14 +189,33 @@ function deleteAllHistory() {
 
 
 //timeline
+async function logoutRecord() {
+    var realtime = new Date(Date.now());
+
+    await $.ajax({
+        url: "http://localhost:5002/timeline/logoutrecord",
+        type: "put",
+        data: {
+            text: 'has logged out.',
+            hits: 1,
+            time: realtime
+        },
+        success: (res) => {
+            console.log(res)
+        }
+    })
+
+    logout()
+}
+
 function addNewEvent(pokeType, criteria) {
     var now = new Date(Date.now());
 
     $.ajax({
-        url: "https://thawing-sea-52374.herokuapp.com/timeline/insert",
+        url: "http://localhost:5002/timeline/insert",
         type: "put",
         data: {
-            text: `Client has searched '${criteria}' for ${pokeType}`,
+            text: ` has searched '${criteria}' for ${pokeType}`,
             hits: 1,
             time: now
         },
