@@ -78,6 +78,30 @@ const usersSchema = new mongoose.Schema({
 
 const usersModel = mongoose.model("users", usersSchema);
 
+app.put('/api/signup', function (req, res) {
+    usersModel.find({
+        useremail: req.body.newEmail
+    }, function (err, users) {
+        if (users.length == 0) {
+            usersModel.create({
+                username: req.body.newName,
+                password: req.body.newPassword,
+                useremail: req.body.newEmail
+            }, function (err, data) {
+                if (err) {
+                    console.log("Error " + err);
+                } else {
+                    console.log(data);
+                }
+                res.send("Insertion is sucessful!");
+            });
+        } else {
+            res.send(false)
+        }
+    })
+
+})
+
 
 app.get('/checkuser', function (req, res) {
     if (req.session.loggedIn) {

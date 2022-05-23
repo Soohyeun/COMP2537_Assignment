@@ -23,12 +23,21 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <!-- js -->
-    <script src="login.js"></script>
+    <script src="signup.js"></script>
+    <style>
+        main {
+            margin-bottom: 0;
+        }
+        label {
+            font-family: 'Russo One', sans-serif;
+            width: 80px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="outer" style="text-align:center;">
-        <h2 style="margin: 10px 0;">
+        <h2 style="margin: 10px 0; font-family: 'Russo One', sans-serif;">
             Sign up
         </h2>
         <main style="display:block">
@@ -51,9 +60,10 @@
                 <label>Confirm password</label>
                 <input type="password" id="passwordConfirm" placeholder="Enter password again">
             </div>
+            <div id="invalidMessage" style="color: red;"></div>
         </main>
         <div>
-            <button>Submit</button>
+            <button class="btn btn-success" onclick="signup()">Submit</button>
         </div>
     </div>
 
