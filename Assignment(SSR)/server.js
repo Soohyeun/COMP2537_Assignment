@@ -3,6 +3,7 @@ const app = express()
 app.set('view engine', 'ejs');
 const https = require('https');
 const fs = require("fs");
+const crypto = require('crypto');
 
 app.listen(process.env.PORT || 5002, function (err) {
     if (err)
@@ -73,7 +74,8 @@ app.get('/signup', function (req, res) {
 const usersSchema = new mongoose.Schema({
     username: String,
     password: String,
-    useremail: String
+    useremail: String,
+    usersalt: String
 });
 
 const usersModel = mongoose.model("users", usersSchema);
@@ -83,10 +85,16 @@ app.put('/api/signup', function (req, res) {
         useremail: req.body.newEmail
     }, function (err, users) {
         if (users.length == 0) {
+            const salt = crypto.randomBytes(128).toString('base64');
+            const hashPassword = crypto
+                .createHash('sha512')
+                .update(req.body.newPassword + salt)
+                .digest('hex');
             usersModel.create({
                 username: req.body.newName,
-                password: req.body.newPassword,
-                useremail: req.body.newEmail
+                password: hashPassword,
+                useremail: req.body.newEmail,
+                usersalt: salt
             }, function (err, data) {
                 if (err) {
                     console.log("Error " + err);
@@ -136,9 +144,8 @@ app.get("/logout", function (req, res) {
 
 
 app.post('/api/login', function (req, res) {
-    CurrentUserID = req.body.useremail;
-    CurrentUserPW = req.body.userpw;
-    console.log(CurrentUserID + CurrentUserPW)
+    var CurrentUserID = req.body.useremail;
+    // CurrentUserPW = req.body.userpw;
 
     usersModel.find({
         useremail: CurrentUserID
@@ -151,6 +158,12 @@ app.post('/api/login', function (req, res) {
                 res.send('no user')
             } else {
                 console.log(users)
+
+                const CurrentUserPW = crypto
+                    .createHash('sha512')
+                    .update(req.body.userpw + users[0].usersalt)
+                    .digest('hex');
+
                 console.log(CurrentUserPW)
                 if (users[0].password == CurrentUserPW) {
                     res.send('login')

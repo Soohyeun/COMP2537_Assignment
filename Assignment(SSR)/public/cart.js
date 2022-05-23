@@ -118,7 +118,7 @@ async function checkout() {
     })
 
     alert("Order has been successfully placed!")
-    // location.assign('/timeline.html')
+    location.assign('/timeline.html')
 }
 
 
