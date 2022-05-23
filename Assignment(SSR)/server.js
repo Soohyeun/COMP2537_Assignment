@@ -40,7 +40,9 @@ const mongoose = require('mongoose');
 const {
     addAbortSignal
 } = require('stream');
-const { ObjectId } = require('mongodb');
+const {
+    ObjectId
+} = require('mongodb');
 
 //localhost쓰면 안됨 ㅠㅠ 127.0.0.1쓰기
 // mongoose.connect("mongodb://127.0.0.1:27017/timelineDB", {
@@ -288,5 +290,51 @@ app.get('/profile/:id', function (req, res) {
             });
         })
     });
+
+})
+
+
+
+
+
+// Add cart
+
+const ordersSchema = new mongoose.Schema({
+    userid: String,
+    itemname: String,
+    itemimg: String,
+    itemhp: Number,
+    quantity: Number,
+    status: String,
+    time: String
+});
+
+const ordersModel = mongoose.model("orders", ordersSchema);
+
+
+
+app.put('/addcart/insert', function (req, res) {
+    if (req.session.loggedIn) {
+        ordersModel.create({
+            'userid': req.session.userid,
+            'itemname': req.body.name,
+            'itemimg': req.body.img,
+            'itemhp': req.body.hp,
+            'quantity': '1',
+            'status': 'cart',
+            'time': 'none',
+        }, function (err, data) {
+            if (err) {
+                console.log("Error " + err);
+            } else {
+                console.log(data);
+            }
+            res.send("Insertion is sucessful!");
+        });
+    } else {
+        res.send(false)
+    }
+
+
 
 })

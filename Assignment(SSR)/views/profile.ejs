@@ -11,6 +11,13 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+    
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- jquery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
     <style>
         * {
@@ -24,13 +31,15 @@
 
         h1 {
             margin: 5px;
+            font-size: 30px;
         }
 
         h3 {
             margin: 10px;
+            font-size: 17px;
         }
 
-        button {
+        #information button {
             border: 0;
             cursor: pointer;
             background-color: transparent;
@@ -67,7 +76,37 @@
             </h3>
 
         </div>
+        <button class="btn btn-success" onclick="add_cart()">Add Cart</button>
     </main>
+
+    <script>
+        async function add_cart() {
+            let itemName = '<%= name %>';
+            let itemHP = '<%= HP %>';
+            let itemImg = '<%= img_src %>';
+            console.log(itemName+ itemHP+itemImg)
+
+            await $.ajax({
+                url: "http://localhost:5002/addcart/insert",
+                type: "put",
+                data: {
+                    name: itemName,
+                    hp: itemHP,
+                    img: itemImg
+                },
+                success: (res) => {
+                    if(res) {
+                        console.log(res)
+                        self.close();
+                    }else {
+                        alert("please login first")
+                    }
+                }
+            })
+
+            
+        }
+    </script>
 </body>
 
 </html>
