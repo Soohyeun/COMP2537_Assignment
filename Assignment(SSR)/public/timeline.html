@@ -101,13 +101,23 @@
             text-align: center;
         }
 
+        #timelineList h5 {
+            font-family: 'Russo One', sans-serif;
+        }
+
         #profile h4 {
             font-family: 'Russo One', sans-serif;
         }
 
-        #profile,
-        #orderHistory {
+        #profile {
             padding: 30px;
+            border-radius: 20px;
+            border: 5px solid rgb(212, 213, 213);
+            margin-bottom: 30px;
+        }
+
+        #orderHistory {
+            padding: 30px 30px 30px 10px;
             border-radius: 20px;
             border: 5px solid rgb(212, 213, 213);
             margin-bottom: 30px;
@@ -133,6 +143,20 @@
                 margin-right: 20px;
             }
         }
+
+        .orderName{
+            font-family: 'Russo One', sans-serif;
+            font-size: 20px;
+            padding-right: 10px;
+        }
+
+        .orederHpQtt{
+            font-family: 'Russo One', sans-serif;
+        }
+
+        .orderTime {
+            font-size: 13px;
+        }
     </style>
 </head>
 
@@ -156,7 +180,9 @@
 
                 <h2> Order History </h2>
                 <div id="orderHistory">
-
+                    <ol id="orderList">
+                
+                    </ol>
 
                 </div>
 

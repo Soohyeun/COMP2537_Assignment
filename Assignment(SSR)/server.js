@@ -255,6 +255,8 @@ app.get('/timeline/increaseHits/:id', function (req, res) {
 })
 
 
+
+
 // See pokemon profile start
 app.get('/profile/:id', function (req, res) {
 
@@ -297,7 +299,7 @@ app.get('/profile/:id', function (req, res) {
 
 
 
-// Add cart
+// Use Orders collection (cart / order)
 
 const ordersSchema = new mongoose.Schema({
     userid: String,
@@ -376,7 +378,6 @@ app.get('/addcart/getcart', function (req, res) {
     });
 })
 
-// increase quantity
 app.get('/addcart/increaseQtt/:itemName', function (req, res) {
     ordersModel.updateOne({
         userid: req.session.userid,
@@ -396,7 +397,6 @@ app.get('/addcart/increaseQtt/:itemName', function (req, res) {
     });
 })
 
-// increase quantity
 app.get('/addcart/decreaseQtt/:itemName', function (req, res) {
     ordersModel.updateOne({
         userid: req.session.userid,
@@ -440,6 +440,20 @@ app.put('/addcart/checkout', function (req, res) {
             status: 'ordered',
             time: req.body.time
         }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
+
+app.get('/getorders', function (req, res) {
+    ordersModel.find({
+        userid: req.session.userid,
+        status: 'ordered'
     }, function (err, data) {
         if (err) {
             console.log("Error " + err);

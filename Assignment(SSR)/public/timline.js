@@ -7,7 +7,8 @@ async function checkUser() {
             console.log(data)
             if (data) {
                 showProfile(data);
-                loadEventsToMainDiv(data);
+                loadEventsToMainDiv();
+                loadPreviousOrder();
             } else {
                 window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;')
             }
@@ -20,7 +21,31 @@ function showProfile(data) {
     $("#email").html(data.useremail)
 }
 
-function loadEventsToMainDiv(data) {
+
+function populateOrders(data){
+
+    for (j=0; j<data.length; j++){
+        $("#orderList").append(`<li>
+        <div><span class="orderName">${data[j].itemname}</span><span class="orederHpQtt">${data[j].itemhp*data[j].quantity}HP (${data[j].itemhp}HP X ${data[j].quantity})</span></div>
+        <div class="orderTime">${data[j].time.split(" G")[0]}</div>
+    </li>`)
+    }
+
+
+}
+
+function loadPreviousOrder() {
+    // $('#orderList').empty();
+
+    $.ajax({
+        url: "http://localhost:5002/getorders",
+        type: "get",
+        success: populateOrders
+    })
+
+}
+
+function loadEventsToMainDiv() {
     $('#timelineList').empty();
 
     $.ajax({
