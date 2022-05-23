@@ -334,7 +334,18 @@ app.put('/addcart/insert', function (req, res) {
     } else {
         res.send(false)
     }
+})
 
-
-
+app.get('/addcart/getcart', function (req, res) {
+    ordersModel.find({
+        userid: req.session.userid,
+        status: 'cart'
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
 })
