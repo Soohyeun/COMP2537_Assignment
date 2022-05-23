@@ -207,8 +207,8 @@ app.put('/timeline/logoutrecord', function (req, res) {
 app.put('/timeline/insert', function (req, res) {
     timelineModel.create({
         'userid': req.session.userid,
-        'text': req.body.text,
-        'time': req.session.name + req.body.time,
+        'text': req.session.name + req.body.text,
+        'time': req.body.time,
         'hits': req.body.hits
     }, function (err, data) {
         if (err) {
@@ -315,22 +315,48 @@ const ordersModel = mongoose.model("orders", ordersSchema);
 
 app.put('/addcart/insert', function (req, res) {
     if (req.session.loggedIn) {
-        ordersModel.create({
+
+        ordersModel.find({
             'userid': req.session.userid,
             'itemname': req.body.name,
-            'itemimg': req.body.img,
-            'itemhp': req.body.hp,
-            'quantity': '1',
-            'status': 'cart',
-            'time': 'none',
+            'status': 'cart'
         }, function (err, data) {
-            if (err) {
-                console.log("Error " + err);
+            if (data.length == 0) {
+                ordersModel.create({
+                    userid: req.session.userid,
+                    itemname: req.body.name,
+                    itemimg: req.body.img,
+                    itemhp: req.body.hp,
+                    quantity: '1',
+                    status: 'cart',
+                    time: 'none',
+                }, function (err, data) {
+                    if (err) {
+                        console.log("Error " + err);
+                    } else {
+                        console.log(data);
+                    }
+                    res.send("Insertion is sucessful!");
+                });
             } else {
-                console.log(data);
+                ordersModel.updateOne({
+                    userid: req.session.userid,
+                    status: 'cart',
+                    itemname: req.body.name
+                }, {
+                    $inc: {
+                        quantity: 1
+                    }
+                }, function (err, data) {
+                    if (err) {
+                        console.log("Error " + err);
+                    } else {
+                        console.log(data);
+                    }
+                    res.send("Update is sucessful!");
+                })
             }
-            res.send("Insertion is sucessful!");
-        });
+        })
     } else {
         res.send(false)
     }
@@ -340,6 +366,80 @@ app.get('/addcart/getcart', function (req, res) {
     ordersModel.find({
         userid: req.session.userid,
         status: 'cart'
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
+
+// increase quantity
+app.get('/addcart/increaseQtt/:itemName', function (req, res) {
+    ordersModel.updateOne({
+        userid: req.session.userid,
+        status: 'cart',
+        itemname: req.params.itemName
+    }, {
+        $inc: {
+            quantity: 1
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
+
+// increase quantity
+app.get('/addcart/decreaseQtt/:itemName', function (req, res) {
+    ordersModel.updateOne({
+        userid: req.session.userid,
+        status: 'cart',
+        itemname: req.params.itemName
+    }, {
+        $inc: {
+            quantity: -1
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
+
+app.get('/addcart/delete/:itemName', function (req, res) {
+    ordersModel.remove({
+        userid: req.session.userid,
+        status: 'cart',
+        itemname: req.params.itemName
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send("Remove request is successful!");
+    });
+})
+
+app.put('/addcart/checkout', function (req, res) {
+    ordersModel.updateMany({
+        userid: req.session.userid,
+        status: 'cart',
+    }, {
+        $set: {
+            status: 'ordered',
+            time: req.body.time
+        }
     }, function (err, data) {
         if (err) {
             console.log("Error " + err);
