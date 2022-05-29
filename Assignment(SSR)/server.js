@@ -258,6 +258,23 @@ app.put('/deleteUser', function (req, res) {
     });
 })
 
+// Update users
+app.put('/updateUser', function (req, res) {
+    usersModel.updateOne({
+        'useremail': req.body.userEmail
+    }, {
+        $set: {
+            usertype: 'admin'
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send("Remove request is successful!");
+    });
+})
 
 //timeline start
 //참고로 collection명은 무조건 복수 s, 대문자 포함하면 안된다!

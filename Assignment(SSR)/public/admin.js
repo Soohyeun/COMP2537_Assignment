@@ -62,6 +62,22 @@ async function removeUser(src) {
     }
 }
 
+async function updateUser(src) {
+    console.log(src.value)
+    if (confirm("Do you want to update user?")) {
+        await $.ajax({
+            url: "http://localhost:5002/updateUser",
+            type: "put",
+            data: {
+                userEmail: src.value
+            },
+            success: (res) => {
+                location.reload();
+            }
+        })
+    }
+}
+
 async function signUp() {
     $("#invalidMessage").empty();
     var newEmail = $("#emailInput").val();
