@@ -31,7 +31,7 @@ async function load_history() {
         type: "get",
         success: (res) => {
             console.log(res)
-            for(i=0; i<res.length; i++) {
+            for (i = 0; i < res.length; i++) {
                 $("#result").append(`<div>Time: ${res[i].time}</div><div>${res[i].result}</div>`)
             }
         }
@@ -41,7 +41,7 @@ async function load_history() {
 function makeGrid() {
     $("#game_grid").empty()
     $("#result").empty()
-    
+
     // Make a list contains correct number of pokemon id
     let pokemonList = [];
     let i = 1;
@@ -85,6 +85,18 @@ function startGame() {
         if (pokeNum <= (row * column / 2)) {
             if ((row * column) % 2 == 0) {
                 makeGrid();
+
+                //set timer
+                var time = 49;
+                var timer = setInterval(function () {
+                    $('#timer').html(time);
+                    time--;
+
+                    if (time < 0) {
+                        clearInterval(timer);
+                        DecideOutcome();
+                    }
+                }, 1000)
             } else {
                 alert("Row * Column must be even number.")
             }
@@ -94,18 +106,6 @@ function startGame() {
     } else {
         alert("Please enter the number between 2 and 4.");
     }
-
-    //set timer
-    var time = 49;
-    var timer = setInterval(function () {
-        $('#timer').html(time);
-        time--;
-
-        if (time < 0) {
-            clearInterval(timer);
-            DecideOutcome();
-        }
-    }, 1000)
 }
 
 async function DecideOutcome() {
