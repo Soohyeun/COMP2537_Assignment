@@ -75,7 +75,8 @@ const usersSchema = new mongoose.Schema({
     username: String,
     password: String,
     useremail: String,
-    usersalt: String
+    usersalt: String,
+    usertype: String,
 });
 
 const usersModel = mongoose.model("users", usersSchema);
@@ -94,7 +95,8 @@ app.put('/api/signup', function (req, res) {
                 username: req.body.newName,
                 password: hashPassword,
                 useremail: req.body.newEmail,
-                usersalt: salt
+                usersalt: salt,
+                usertype: "user"
             }, function (err, data) {
                 if (err) {
                     console.log("Error " + err);
@@ -116,7 +118,8 @@ app.get('/checkuser', function (req, res) {
         res.send({
             userID: req.session.id,
             username: req.session.name,
-            useremail: req.session.email
+            useremail: req.session.email,
+            usertype: req.session.type
         })
     } else {
         res.send(false)
@@ -171,6 +174,7 @@ app.post('/api/login', function (req, res) {
                     req.session.userid = users[0]._id;
                     req.session.name = users[0].username;
                     req.session.email = users[0].useremail;
+                    req.session.type = users[0].usertype;
                     req.session.save(function (err) {});
                     console.log(req.session.loggedIn)
                     console.log(req.session.userid)
@@ -182,6 +186,63 @@ app.post('/api/login', function (req, res) {
     });
 })
 
+//admin page
+app.put('/signupbyadmin', function (req, res) {
+    usersModel.find({
+        useremail: req.body.newEmail
+    }, function (err, users) {
+        if (users.length == 0) {
+            const salt = crypto.randomBytes(128).toString('base64');
+            const hashPassword = crypto
+                .createHash('sha512')
+                .update(req.body.newPassword + salt)
+                .digest('hex');
+            usersModel.create({
+                username: req.body.newName,
+                password: hashPassword,
+                useremail: req.body.newEmail,
+                usersalt: salt,
+                usertype: req.body.newUserType
+            }, function (err, data) {
+                if (err) {
+                    console.log("Error " + err);
+                } else {
+                    console.log(data);
+                }
+                res.send("Insertion is sucessful!");
+            });
+        } else {
+            res.send(false)
+        }
+    })
+
+})
+
+app.get('/usersinfo', function (req, res) {
+    usersModel.find({
+        usertype: 'user',
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
+
+app.get('/adminsinfo', function (req, res) {
+    usersModel.find({
+        usertype: 'admin',
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
 
 
 //timeline start
