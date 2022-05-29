@@ -1,3 +1,28 @@
+var thisUser = '';
+// Check user in / admin
+async function checkUser() {
+    await $.ajax({
+        type: "GET",
+        url: "http://localhost:5002/checkuser",
+        success: function (data) {
+            if (data) {
+                if (data.usertype == 'admin') {
+                    thisUser = data.useremail;
+                    console.log(thisUser)
+                    loadUsers();
+                    loadAdmins();
+                } else {
+                    alert("You are not admin");
+                    document.location = '/';
+                }
+            } else {
+                window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;');
+                document.location = '/';
+            }
+        }
+    })
+}
+
 //Populate admin info
 function loadAdmins() {
     $("#adminList").empty();
@@ -47,18 +72,21 @@ function loadUsers() {
 
 // Remove user
 async function removeUser(src) {
-    console.log(src.value)
-    if (confirm("Do you want to delete user?")) {
-        await $.ajax({
-            url: "http://localhost:5002/deleteUser",
-            type: "put",
-            data: {
-                userEmail: src.value
-            },
-            success: (res) => {
-                location.reload();
-            }
-        })
+    if (src.value == thisUser) {
+        alert("You cannot remove yourself!")
+    } else {
+        if (confirm("Do you want to delete user?")) {
+            await $.ajax({
+                url: "http://localhost:5002/deleteUser",
+                type: "put",
+                data: {
+                    userEmail: src.value
+                },
+                success: (res) => {
+                    location.reload();
+                }
+            })
+        }
     }
 }
 
@@ -111,8 +139,7 @@ async function signUp() {
 }
 
 function setup() {
-    loadUsers()
-    loadAdmins()
+    checkUser()
 }
 
 $(document).ready(setup)
