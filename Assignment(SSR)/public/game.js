@@ -15,10 +15,24 @@ async function checkUser() {
         url: "http://localhost:5002/checkuser",
         success: function (data) {
             console.log(data)
-            if (data) {
-                console.log(data.userID)
-            } else {
+            if (!data) {
                 window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;')
+                location.assign('/')
+            }
+        }
+    })
+}
+
+async function load_history() {
+    $("#game_grid").empty()
+    $("#result").empty()
+    await $.ajax({
+        url: "http://localhost:5002/loadGameResult",
+        type: "get",
+        success: (res) => {
+            console.log(res)
+            for(i=0; i<res.length; i++) {
+                $("#result").append(`<div>Time: ${res[i].time}</div><div>${res[i].result}</div>`)
             }
         }
     })
@@ -26,7 +40,8 @@ async function checkUser() {
 
 function makeGrid() {
     $("#game_grid").empty()
-
+    $("#result").empty()
+    
     // Make a list contains correct number of pokemon id
     let pokemonList = [];
     let i = 1;
@@ -93,22 +108,28 @@ function startGame() {
     }, 1000)
 }
 
-function DecideOutcome() {
+async function DecideOutcome() {
     if (count == row * column / 2) {
         outcome = 'win';
-        setTimeout(function () {
-            alert("You win");
-            location.reload();
-        }, 500);
-
     } else {
         outcome = 'lose';
-        setTimeout(function () {
-            alert("You lose");
-            location.reload();
-        }, 500);
-
     }
+
+    var now = new Date(Date.now());
+
+    await $.ajax({
+        url: "http://localhost:5002/saveGameResult",
+        type: "put",
+        data: {
+            result: outcome,
+            time: now
+        },
+        success: (res) => {
+            console.log(res)
+            alert(`You ${outcome}`);
+            location.reload();
+        }
+    })
 }
 
 function matchCards() {
@@ -159,6 +180,7 @@ function saveCardInfo() {
 }
 
 function setup() {
+    checkUser()
     $("body").on("click", ".card", saveCardInfo)
 }
 

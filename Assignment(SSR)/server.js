@@ -500,3 +500,42 @@ app.get('/getorders', function (req, res) {
         res.send(data);
     });
 })
+
+
+// Use game collection
+
+const gamesSchema = new mongoose.Schema({
+    userid: String,
+    result: String,
+    time: String
+});
+
+const gamesModel = mongoose.model("games", gamesSchema);
+
+app.put('/saveGameResult', function (req, res) {
+    gamesModel.create({
+        'userid': req.session.userid,
+        'result': req.body.result,
+        'time': req.body.time
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send("Insertion is sucessful!");
+    });
+})
+
+app.get('/loadGameResult', function (req, res) {
+    gamesModel.find({
+        userid: req.session.userid,
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send(data);
+    });
+})
