@@ -244,6 +244,20 @@ app.get('/adminsinfo', function (req, res) {
     });
 })
 
+// Remove users
+app.put('/deleteUser', function (req, res) {
+    usersModel.remove({
+        'useremail': req.body.userEmail
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log(data);
+        }
+        res.send("Remove request is successful!");
+    });
+})
+
 
 //timeline start
 //참고로 collection명은 무조건 복수 s, 대문자 포함하면 안된다!

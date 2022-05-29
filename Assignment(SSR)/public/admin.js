@@ -37,12 +37,29 @@ function loadUsers() {
                 <div>
                     ID: ${user.useremail}
                 </div>
-                <button class="${user.useremail}" onclick="updateUser(this)">update</button>
-                <button class="${user.useremail}" onclick="removeUser(this)">Remove</button>
+                <button value="${user.useremail}" onclick="updateUser(this)">update</button>
+                <button value="${user.useremail}" onclick="removeUser(this)">Remove</button>
             </div>`)
             });
         }
     })
+}
+
+// Remove user
+async function removeUser(src) {
+    console.log(src.value)
+    if (confirm("Do you want to delete user?")) {
+        await $.ajax({
+            url: "http://localhost:5002/deleteUser",
+            type: "put",
+            data: {
+                userEmail: src.value
+            },
+            success: (res) => {
+                location.reload();
+            }
+        })
+    }
 }
 
 async function signUp() {
