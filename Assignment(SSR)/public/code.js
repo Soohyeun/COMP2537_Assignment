@@ -76,6 +76,9 @@ async function checkUser() {
             console.log(data)
             if(data){
                 $("#login").html(`<button onclick="logoutRecord()" class="dropbtn"> Logout </button>`)
+                if (data.usertype == 'admin') {
+                    $('#goAdmin').css('display','inline')
+                }
             }else {
                 $("#login").html(`<button onclick="window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;')" class="dropbtn"> Login </button>`)
             }

@@ -37,7 +37,8 @@
         <nav>
             <div id="inside_nav">
                 <div class="dropdown">
-                    <button onclick="myFunction_t()" id="dropbtnType" class="dropbtn">Type <i class="fa fa-caret-down"></i></button>
+                    <button onclick="myFunction_t()" id="dropbtnType" class="dropbtn">Type <i
+                            class="fa fa-caret-down"></i></button>
                     <div id="TypeDropdown" class="dropdown-content">
                         <button value="grass" onclick="searchByType(this);">grass</button>
                         <button value="ground" onclick="searchByType(this);">ground</button>
@@ -61,7 +62,8 @@
                 </div>
 
                 <div class="dropdown">
-                    <button onclick="myFunction_c()" id="dropbtnColour" class="dropbtn">Colour <i class="fa fa-caret-down"></i></button>
+                    <button onclick="myFunction_c()" id="dropbtnColour" class="dropbtn">Colour <i
+                            class="fa fa-caret-down"></i></button>
                     <div id="ColourDropdown" class="dropdown-content">
                         <button value="black" onclick="searchByColour(this);">black</button>
                         <button value="blue" onclick="searchByColour(this);">blue</button>
@@ -80,10 +82,10 @@
             <div id="inputName">
                 <label for="poke_name">Name/ID</label>
                 <span>
-                <input type="text" id="input_name" placeholder="Enter name or id" onclick="myFunction_n()">
-                <div id="NameHistory" class="dropdown-content" style="margin-left: 62px; width: 180px;">
-                    <button onclick="deleteAllHistory()">Delete all</button>
-                </div>
+                    <input type="text" id="input_name" placeholder="Enter name or id" onclick="myFunction_n()">
+                    <div id="NameHistory" class="dropdown-content" style="margin-left: 62px; width: 180px;">
+                        <button onclick="deleteAllHistory()">Delete all</button>
+                    </div>
                 </span>
                 <button onclick="searchByName()" class='btn btn-outline-secondary'>Search</button>
             </div>
@@ -99,12 +101,13 @@
             <div id="goTimeline">
                 <button onclick="document.location='./timeline.html'" class="dropbtn"> Profile </button>
             </div>
-            
+
             <div id="login">
-                <button onclick="window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;')" class="dropbtn"> Login </button>
+                <button onclick="window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;')"
+                    class="dropbtn"> Login </button>
             </div>
         </nav>
-        <div><button id="admin_btn" onclick="document.location='./admin.html'">Admin page!</button></div>
+        <div style="display: none;" id="goAdmin"><button id="admin_btn" onclick="document.location='./admin.html'">Admin page!</button></div>
         <main>
 
         </main>

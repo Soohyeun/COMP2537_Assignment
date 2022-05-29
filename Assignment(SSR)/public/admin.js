@@ -12,8 +12,8 @@ async function checkUser() {
                     loadUsers();
                     loadAdmins();
                 } else {
-                    alert("You are not admin");
                     document.location = '/';
+                    alert("You are not admin");
                 }
             } else {
                 window.open('/login', 'Login', 'width=300, height=400, left=400, top=200;');
